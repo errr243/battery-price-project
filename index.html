@@ -9,16 +9,28 @@
             font-family: Arial, sans-serif;
             margin: 20px;
             line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
         }
         .battery-item {
             margin-bottom: 15px;
-            padding: 10px;
+            padding: 15px;
             border-bottom: 1px solid #eee;
+            transition: background-color 0.2s;
+        }
+        .battery-item:hover {
+            background-color: #f9f9f9;
         }
         .battery-item a {
             color: #1a0dab;
             text-decoration: none;
             font-weight: bold;
+            font-size: 1.1em;
         }
         .battery-item a:hover {
             text-decoration: underline;
@@ -26,50 +38,76 @@
         .price {
             color: #007600;
             font-weight: bold;
+            margin: 8px 0;
         }
         .specs {
             color: #555;
             font-size: 0.9em;
+        }
+        .loading {
+            text-align: center;
+            margin: 20px;
+            font-style: italic;
+            color: #777;
+        }
+        .error {
+            color: #d00;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #d00;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
     <h1>Battery Price Comparison</h1>
     
-    <div class="battery-container">
-        <!-- 배터리 아이템 샘플 -->
-        <div class="battery-item">
-            <a href="https://www.amazon.com/your-affiliate-link-here" target="_blank">Energizer AA Batteries (20 Count)</a>
-            <div class="price">$12.99</div>
-            <div class="specs">Type: AA | Pack: 20 | Rechargeable: No</div>
-        </div>
-        
-        <div class="battery-item">
-            <a href="https://www.amazon.com/your-affiliate-link-here" target="_blank">Duracell AA Batteries (16 Count)</a>
-            <div class="price">$10.99</div>
-            <div class="specs">Type: AA | Pack: 16 | Rechargeable: No</div>
-        </div>
-        
-        <!-- 더 많은 배터리 아이템 추가 -->
+    <div id="battery-container" class="battery-container">
+        <div class="loading">데이터를 불러오는 중...</div>
     </div>
+
     <script>
+        // 페이지 로드 시 배터리 데이터 가져오기
         document.addEventListener('DOMContentLoaded', function() {
-            // 모든 배터리 아이템을 배열로 가져오기
-            const batteryItems = Array.from(document.querySelectorAll('.battery-item'));
+            const container = document.getElementById('battery-container');
             
-            // 가격 추출 함수
-            function getPrice(item) {
-                const priceText = item.querySelector('.price').textContent;
-                return parseFloat(priceText.replace('$', ''));
-            }
-            
-            // 가격 순으로 정렬
-            batteryItems.sort((a, b) => getPrice(a) - getPrice(b));
-            
-            // 정렬된 아이템을 다시 컨테이너에 추가
-            const container = document.querySelector('.battery-container');
-            container.innerHTML = '';
-            batteryItems.forEach(item => container.appendChild(item));
+            // batteries.json 파일에서 데이터 가져오기
+            fetch('batteries.json')
+                .then(response => {
+                    // 응답이 성공적인지 확인
+                    if (!response.ok) {
+                        throw new Error('데이터를 불러오는 데 문제가 발생했습니다.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // 로딩 메시지 제거
+                    container.innerHTML = '';
+                    
+                    // 가격 순으로 정렬
+                    data.sort((a, b) => a.price - b.price);
+                    
+                    // 배터리 아이템 생성 및 추가
+                    data.forEach(battery => {
+                        const item = document.createElement('div');
+                        item.className = 'battery-item';
+                        item.innerHTML = `
+                            <a href="${battery.link}" target="_blank">${battery.name}</a>
+                            <div class="price">$${battery.price.toFixed(2)}</div>
+                            <div class="specs">${battery.specs}</div>
+                        `;
+                        container.appendChild(item);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    container.innerHTML = `
+                        <div class="error">
+                            <p>죄송합니다. 데이터를 불러오는 중 오류가 발생했습니다.</p>
+                            <p>오류 메시지: ${error.message}</p>
+                        </div>
+                    `;
+                });
         });
     </script>
 </body>

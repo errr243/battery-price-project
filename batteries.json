@@ -1,0 +1,32 @@
+[
+    {
+      "name": "Energizer AA Batteries (20 Count)",
+      "price": 12.99,
+      "specs": "Type: AA | Pack: 20 | Rechargeable: No",
+      "link": "https://www.amazon.com/your-affiliate-link-here"
+    },
+    {
+      "name": "Duracell AA Batteries (16 Count)",
+      "price": 10.99,
+      "specs": "Type: AA | Pack: 16 | Rechargeable: No",
+      "link": "https://www.amazon.com/your-affiliate-link-here"
+    },
+    {
+      "name": "Energizer AAA Batteries (24 Count)",
+      "price": 14.99,
+      "specs": "Type: AAA | Pack: 24 | Rechargeable: No",
+      "link": "https://www.amazon.com/your-affiliate-link-here"
+    },
+    {
+      "name": "Panasonic Eneloop AA Rechargeable Batteries (4 Count)",
+      "price": 13.45,
+      "specs": "Type: AA | Pack: 4 | Rechargeable: Yes",
+      "link": "https://www.amazon.com/your-affiliate-link-here"
+    },
+    {
+      "name": "AmazonBasics AA Batteries (48 Count)",
+      "price": 15.49,
+      "specs": "Type: AA | Pack: 48 | Rechargeable: No",
+      "link": "https://www.amazon.com/your-affiliate-link-here"
+    }
+  ]
