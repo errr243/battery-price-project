@@ -1,110 +1,289 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Battery Price Comparison</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        .battery-item {
-            margin-bottom: 15px;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            transition: background-color 0.2s;
-        }
-        .battery-item:hover {
-            background-color: #f9f9f9;
-        }
-        .battery-item a {
-            color: #1a0dab;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-        .battery-item a:hover {
-            text-decoration: underline;
-        }
-        .price {
-            color: #007600;
-            font-weight: bold;
-            margin: 8px 0;
-        }
-        .specs {
-            color: #555;
-            font-size: 0.9em;
-        }
-        .loading {
-            text-align: center;
-            margin: 20px;
-            font-style: italic;
-            color: #777;
-        }
-        .error {
-            color: #d00;
-            text-align: center;
-            padding: 20px;
-            border: 1px solid #d00;
-            border-radius: 4px;
-        }
-    </style>
+    <title>Battery Price Comparison | Find the Best Deals on Batteries</title>
+    <meta name="description" content="Compare prices on AA, AAA, and all types of batteries. Find the best deals and save money with our battery price comparison tool.">
+    <meta name="keywords" content="battery price comparison, cheap batteries, AA batteries, AAA batteries, battery deals">
+    
+    <!-- Open Graph Tags for Social Sharing -->
+    <meta property="og:title" content="Battery Price Comparison | batteryprice.org">
+    <meta property="og:description" content="Find the best deals on all types of batteries">
+    <meta property="og:image" content="https://batteryprice.org/images/social-banner.jpg">
+    <meta property="og:url" content="https://batteryprice.org">
+    
+    <!-- Google Analytics tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Battery Price Comparison</h1>
+    <header>
+        <div class="container">
+            <h1>Battery Price Comparison</h1>
+            <p>Find the best deals on batteries and save money</p>
+        </div>
+    </header>
     
-    <div id="battery-container" class="battery-container">
-        <div class="loading">데이터를 불러오는 중...</div>
+    <main class="container">
+        <section class="control-panel">
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label for="type-filter">Battery Type:</label>
+                    <select id="type-filter">
+                        <option value="all">All Types</option>
+                        <option value="AA">AA</option>
+                        <option value="AAA">AAA</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="9V">9V</option>
+                        <option value="CR2032">CR2032 (Button)</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="rechargeable-filter">Rechargeable:</label>
+                    <select id="rechargeable-filter">
+                        <option value="all">All</option>
+                        <option value="true">Rechargeable Only</option>
+                        <option value="false">Non-Rechargeable Only</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="sort-by">Sort By:</label>
+                    <select id="sort-by">
+                        <option value="priceAsc">Price: Low to High</option>
+                        <option value="priceDesc">Price: High to Low</option>
+                        <option value="rating">Highest Rated</option>
+                        <option value="pricePerUnit">Best Value (Price per Unit)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search batteries...">
+                <button id="search-button">Search</button>
+            </div>
+        </section>
+        
+        <section id="battery-container" class="product-grid">
+            <div class="loading">Loading battery data...</div>
+        </section>
+        
+        <div class="affiliate-disclosure">
+            <p>Batteryprice.org participates in the Amazon Associates Program. As an Amazon Associate, we earn from qualifying purchases. This helps support our site.</p>
+        </div>
+    </main>
+    
+    <div id="compare-bar" class="compare-bar">
+        <div class="container">
+            <div class="compare-items" id="compare-items">
+                <!-- Compare items will be added here by JavaScript -->
+            </div>
+            <div class="compare-actions">
+                <button id="compare-button" class="compare-button">Compare Selected Batteries</button>
+            </div>
+        </div>
     </div>
-
+    
     <script>
-        // 페이지 로드 시 배터리 데이터 가져오기
+        // Global variables
+        let allBatteries = [];
+        let compareList = [];
+        
+        // Filter and search functions
+        function filterBatteriesByType(batteries, type) {
+            if (type === 'all') {
+                return batteries;
+            }
+            return batteries.filter(battery => battery.type === type);
+        }
+        
+        function filterBatteriesByRechargeable(batteries, rechargeableFilter) {
+            if (rechargeableFilter === 'all') {
+                return batteries;
+            }
+            const isRechargeable = rechargeableFilter === 'true';
+            return batteries.filter(battery => battery.rechargeable === isRechargeable);
+        }
+        
+        function sortBatteries(batteries, sortBy) {
+            return [...batteries].sort((a, b) => {
+                if (sortBy === 'priceAsc') {
+                    return a.priceUSD - b.priceUSD;
+                } else if (sortBy === 'priceDesc') {
+                    return b.priceUSD - a.priceUSD;
+                } else if (sortBy === 'rating') {
+                    return b.rating - a.rating;
+                } else if (sortBy === 'pricePerUnit') {
+                    return a.pricePerUnit - b.pricePerUnit;
+                }
+                return 0;
+            });
+        }
+        
+        function searchBatteries(batteries, searchTerm) {
+            if (!searchTerm) return batteries;
+            
+            searchTerm = searchTerm.toLowerCase();
+            return batteries.filter(battery => 
+                battery.name.toLowerCase().includes(searchTerm) ||
+                battery.type.toLowerCase().includes(searchTerm) ||
+                battery.chemistry.toLowerCase().includes(searchTerm)
+            );
+        }
+        
+        // UI update functions
+        function createProductCard(battery) {
+            return `
+                <div class="product-card" data-id="${battery.id}">
+                    <div class="product-image">
+                        <img src="${battery.image}" alt="${battery.name}" onerror="this.src='images/battery-placeholder.jpg'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">${battery.name}</h3>
+                        <div class="product-meta">
+                            <span class="battery-type">${battery.type} | ${battery.chemistry}</span>
+                            <span class="battery-capacity">${battery.capacity}</span>
+                        </div>
+                        <div class="product-rating">
+                            ${'★'.repeat(Math.floor(battery.rating))}${'☆'.repeat(5 - Math.floor(battery.rating))}
+                            <span class="rating-count">(${battery.reviewCount})</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">$${battery.priceUSD.toFixed(2)}</span>
+                            <span class="price-per-unit">($${battery.pricePerUnit.toFixed(2)} each)</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="${battery.amazonLink}" class="buy-button" target="_blank" rel="nofollow">
+                                View on Amazon
+                            </a>
+                            <button class="compare-add-button" onclick="addToCompare('${battery.id}')">
+                                + Add to Compare
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function updateProductDisplay() {
+            const container = document.getElementById('battery-container');
+            const typeFilter = document.getElementById('type-filter').value;
+            const rechargeableFilter = document.getElementById('rechargeable-filter').value;
+            const sortBy = document.getElementById('sort-by').value;
+            const searchTerm = document.getElementById('search-input').value;
+            
+            // Apply filters and search
+            let filteredBatteries = filterBatteriesByType(allBatteries, typeFilter);
+            filteredBatteries = filterBatteriesByRechargeable(filteredBatteries, rechargeableFilter);
+            filteredBatteries = searchBatteries(filteredBatteries, searchTerm);
+            
+            // Sort the filtered batteries
+            filteredBatteries = sortBatteries(filteredBatteries, sortBy);
+            
+            // Display the results
+            if (filteredBatteries.length === 0) {
+                container.innerHTML = '<div class="no-results">No batteries match your search criteria.</div>';
+                return;
+            }
+            
+            container.innerHTML = filteredBatteries.map(battery => createProductCard(battery)).join('');
+        }
+        
+        // Compare functions
+        function addToCompare(batteryId) {
+            if (compareList.length >= 4) {
+                alert("You can compare up to 4 batteries at once.");
+                return;
+            }
+            
+            if (!compareList.includes(batteryId)) {
+                compareList.push(batteryId);
+                updateCompareUI();
+            }
+        }
+        
+        function removeFromCompare(batteryId) {
+            compareList = compareList.filter(id => id !== batteryId);
+            updateCompareUI();
+        }
+        
+        function updateCompareUI() {
+            const compareBar = document.getElementById('compare-bar');
+            const compareItems = document.getElementById('compare-items');
+            
+            if (compareList.length > 0) {
+                compareBar.classList.add('active');
+                
+                compareItems.innerHTML = compareList.map(id => {
+                    const battery = allBatteries.find(b => b.id === id);
+                    return `
+                        <div class="compare-item" data-id="${battery.id}">
+                            <img src="${battery.image}" alt="${battery.name}" onerror="this.src='images/battery-placeholder.jpg'">
+                            <div class="compare-name">${battery.name}</div>
+                            <div class="remove-compare" onclick="removeFromCompare('${battery.id}')">✕</div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                compareBar.classList.remove('active');
+            }
+        }
+        
+        function showComparisonView() {
+            if (compareList.length < 2) {
+                alert("Please select at least 2 batteries to compare.");
+                return;
+            }
+            
+            // This would normally navigate to a comparison page or open a modal
+            // For this example, we'll just log the comparison
+            console.log("Comparing batteries:", compareList);
+            alert("Comparison view would open here with batteries: " + compareList.join(", "));
+        }
+        
+        // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
             const container = document.getElementById('battery-container');
             
-            // batteries.json 파일에서 데이터 가져오기
+            // Attach event listeners
+            document.getElementById('type-filter').addEventListener('change', updateProductDisplay);
+            document.getElementById('rechargeable-filter').addEventListener('change', updateProductDisplay);
+            document.getElementById('sort-by').addEventListener('change', updateProductDisplay);
+            document.getElementById('search-button').addEventListener('click', updateProductDisplay);
+            document.getElementById('search-input').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    updateProductDisplay();
+                }
+            });
+            document.getElementById('compare-button').addEventListener('click', showComparisonView);
+            
+            // Fetch battery data
             fetch('batteries.json')
                 .then(response => {
-                    // 응답이 성공적인지 확인
                     if (!response.ok) {
-                        throw new Error('데이터를 불러오는 데 문제가 발생했습니다.');
+                        throw new Error('Network response was not ok');
                     }
                     return response.json();
                 })
                 .then(data => {
-                    // 로딩 메시지 제거
-                    container.innerHTML = '';
-                    
-                    // 가격 순으로 정렬
-                    data.sort((a, b) => a.price - b.price);
-                    
-                    // 배터리 아이템 생성 및 추가
-                    data.forEach(battery => {
-                        const item = document.createElement('div');
-                        item.className = 'battery-item';
-                        item.innerHTML = `
-                            <a href="${battery.link}" target="_blank">${battery.name}</a>
-                            <div class="price">$${battery.price.toFixed(2)}</div>
-                            <div class="specs">${battery.specs}</div>
-                        `;
-                        container.appendChild(item);
-                    });
+                    allBatteries = data;
+                    updateProductDisplay();
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     container.innerHTML = `
                         <div class="error">
-                            <p>죄송합니다. 데이터를 불러오는 중 오류가 발생했습니다.</p>
-                            <p>오류 메시지: ${error.message}</p>
+                            <p>Sorry, there was an error loading the battery data.</p>
+                            <p>Error message: ${error.message}</p>
                         </div>
                     `;
                 });

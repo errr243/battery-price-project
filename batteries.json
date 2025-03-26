@@ -1,32 +1,107 @@
 [
-    {
-      "name": "Energizer AA Batteries (20 Count)",
-      "price": 12.99,
-      "specs": "Type: AA | Pack: 20 | Rechargeable: No",
-      "link": "https://www.amazon.com/your-affiliate-link-here"
-    },
-    {
-      "name": "Duracell AA Batteries (16 Count)",
-      "price": 10.99,
-      "specs": "Type: AA | Pack: 16 | Rechargeable: No",
-      "link": "https://www.amazon.com/your-affiliate-link-here"
-    },
-    {
-      "name": "Energizer AAA Batteries (24 Count)",
-      "price": 14.99,
-      "specs": "Type: AAA | Pack: 24 | Rechargeable: No",
-      "link": "https://www.amazon.com/your-affiliate-link-here"
-    },
-    {
-      "name": "Panasonic Eneloop AA Rechargeable Batteries (4 Count)",
-      "price": 13.45,
-      "specs": "Type: AA | Pack: 4 | Rechargeable: Yes",
-      "link": "https://www.amazon.com/your-affiliate-link-here"
-    },
-    {
-      "name": "AmazonBasics AA Batteries (48 Count)",
-      "price": 15.49,
-      "specs": "Type: AA | Pack: 48 | Rechargeable: No",
-      "link": "https://www.amazon.com/your-affiliate-link-here"
-    }
-  ]
+  {
+    "id": "b001",
+    "name": "Energizer AA Batteries (20 Count)",
+    "type": "AA",
+    "chemistry": "Alkaline",
+    "capacity": "2000mAh",
+    "packageCount": 20,
+    "priceUSD": 12.99,
+    "pricePerUnit": 0.65,
+    "rating": 4.7,
+    "reviewCount": 2583,
+    "image": "images/energizer-aa.jpg",
+    "amazonLink": "https://www.amazon.com/your-affiliate-link-here",
+    "features": [
+      "10-year shelf life",
+      "Leak-resistant construction",
+      "No mercury"
+    ],
+    "popularUses": ["Remote controls", "Toys", "Flashlights"],
+    "rechargeable": false
+  },
+  {
+    "id": "b002",
+    "name": "Duracell AA Batteries (16 Count)",
+    "type": "AA",
+    "chemistry": "Alkaline",
+    "capacity": "1800mAh",
+    "packageCount": 16,
+    "priceUSD": 10.99,
+    "pricePerUnit": 0.69,
+    "rating": 4.6,
+    "reviewCount": 3254,
+    "image": "images/duracell-aa.jpg",
+    "amazonLink": "https://www.amazon.com/your-affiliate-link-here",
+    "features": [
+      "Guaranteed for 10 years in storage",
+      "PowerCheck feature",
+      "Duralock technology"
+    ],
+    "popularUses": ["Wireless devices", "Game controllers", "Small electronics"],
+    "rechargeable": false
+  },
+  {
+    "id": "b003",
+    "name": "Energizer AAA Batteries (24 Count)",
+    "type": "AAA",
+    "chemistry": "Alkaline",
+    "capacity": "1000mAh",
+    "packageCount": 24,
+    "priceUSD": 14.99,
+    "pricePerUnit": 0.62,
+    "rating": 4.7,
+    "reviewCount": 1876,
+    "image": "images/energizer-aaa.jpg",
+    "amazonLink": "https://www.amazon.com/your-affiliate-link-here",
+    "features": [
+      "Long-lasting power",
+      "10-year shelf life",
+      "Leak-resistant construction"
+    ],
+    "popularUses": ["Small electronics", "Remote controls", "Wireless mice"],
+    "rechargeable": false
+  },
+  {
+    "id": "b004",
+    "name": "Panasonic Eneloop AA Rechargeable Batteries (4 Count)",
+    "type": "AA",
+    "chemistry": "NiMH",
+    "capacity": "2000mAh",
+    "packageCount": 4,
+    "priceUSD": 13.45,
+    "pricePerUnit": 3.36,
+    "rating": 4.8,
+    "reviewCount": 9452,
+    "image": "images/eneloop-aa.jpg",
+    "amazonLink": "https://www.amazon.com/your-affiliate-link-here",
+    "features": [
+      "Up to 2100 recharge cycles",
+      "Pre-charged using solar power",
+      "Maintains 70% charge after 10 years"
+    ],
+    "popularUses": ["Digital cameras", "High-drain devices", "Everyday use"],
+    "rechargeable": true
+  },
+  {
+    "id": "b005",
+    "name": "AmazonBasics AA Batteries (48 Count)",
+    "type": "AA",
+    "chemistry": "Alkaline",
+    "capacity": "1800mAh",
+    "packageCount": 48,
+    "priceUSD": 15.49,
+    "pricePerUnit": 0.32,
+    "rating": 4.5,
+    "reviewCount": 4782,
+    "image": "images/amazonbasics-aa.jpg",
+    "amazonLink": "https://www.amazon.com/your-affiliate-link-here",
+    "features": [
+      "10-year shelf life",
+      "Performance tested",
+      "High compatibility"
+    ],
+    "popularUses": ["Everyday devices", "Low-drain electronics", "Bulk usage"],
+    "rechargeable": false
+  }
+]
